@@ -3,7 +3,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./CreateEmployee.css";
 import Modal from "react-modal";
-import { useEmployeeStore } from "@store/employee.store";
+import { useEmployeeStore } from "../../store/employee.store";
+import { states } from "../../store/state";
 
 const CreateEmployee = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,16 +18,14 @@ const CreateEmployee = () => {
   const [department, setDepartment] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const { setEmployees } = useEmployeeStore((state) => ({
-    setEmployees: state.setEmployees,
-  }));
+  const { setEmployees } = useEmployeeStore();
 
   const handleSave = () => {
     const newEmployee = {
       firstName,
       lastName,
-      dateOfBirth,
-      startDate,
+      dateOfBirth: dateOfBirth.toLocaleDateString(),
+      startDate: startDate.toLocaleDateString(),
       street,
       city,
       state,
@@ -107,11 +106,12 @@ const CreateEmployee = () => {
             value={state}
             onChange={(e) => setState(e.target.value)}
           >
-            {/* Populate this with state options */}
             <option value="">Select State</option>
-            <option value="CA">California</option>
-            <option value="NY">New York</option>
-            {/* Add more states as needed */}
+            {states.map((state) => (
+              <option key={state.abbreviation} value={state.abbreviation}>
+                {state.name}
+              </option>
+            ))}
           </select>
 
           <label htmlFor="zip-code">Zip Code</label>
@@ -129,6 +129,7 @@ const CreateEmployee = () => {
           value={department}
           onChange={(e) => setDepartment(e.target.value)}
         >
+          <option value="">Select Department</option>
           <option value="Sales">Sales</option>
           <option value="Marketing">Marketing</option>
           <option value="Engineering">Engineering</option>

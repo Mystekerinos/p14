@@ -1,0 +1,36 @@
+.employee-list-container {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.employee-table th,
+.employee-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.employee-table th {
+    background-color: #f2f2f2;
+}
+
+.employee-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.employee-table tbody tr:hover {
+    background-color: #ddd;
+}
+
+.employee-list-container a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+}
