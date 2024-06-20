@@ -1,5 +1,6 @@
-import EmployeeList from "./pages/employee/Employee";
-import CreateEmployee from "./components/createEmployee/createEmployee";
+// App.js
+import EmployeeList from "./pages/employee/EmployeeList";
+import CreateEmployee from "./components/createEmployee/CreateEmployee";
 
 const App = () => (
   <div>
