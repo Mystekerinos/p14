@@ -1,5 +1,5 @@
 import React from "react";
-import "./EmployeeList.css";
+import "../../assets/css/EmployeeList.css";
 import { useEmployeeStore } from "../../store/employee.store";
 
 const EmployeeList = () => {
