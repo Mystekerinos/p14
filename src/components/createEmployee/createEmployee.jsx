@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./CreateEmployee.css";
+import "../../assets/css/createEmployee.css";
 import Modal from "react-modal";
 import { useEmployeeStore } from "../../store/employee.store";
 import { states } from "../../store/state";
