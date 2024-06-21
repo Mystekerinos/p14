@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
 import Modal from "react-modal";
 import { useEmployeeStore } from "../../store/employee.store";
@@ -17,6 +17,8 @@ const CreateEmployee = () => {
   const [zipCode, setZipCode] = useState("");
   const [department, setDepartment] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [showDobCalendar, setShowDobCalendar] = useState(false);
+  const [showStartCalendar, setShowStartCalendar] = useState(false);
 
   const { setEmployees } = useEmployeeStore();
 
@@ -66,20 +68,40 @@ const CreateEmployee = () => {
         />
 
         <label htmlFor="date-of-birth">Date of Birth</label>
-        <DatePicker
-          selected={dateOfBirth}
-          onChange={(date) => setDateOfBirth(date)}
-          dateFormat="MM/dd/yyyy"
+        <input
+          type="text"
           id="date-of-birth"
+          value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
+          onFocus={() => setShowDobCalendar(true)}
+          readOnly
         />
+        {showDobCalendar && (
+          <Calendar
+            onChange={(date) => {
+              setDateOfBirth(date);
+              setShowDobCalendar(false);
+            }}
+            value={dateOfBirth}
+          />
+        )}
 
         <label htmlFor="start-date">Start Date</label>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          dateFormat="MM/dd/yyyy"
+        <input
+          type="text"
           id="start-date"
+          value={startDate ? startDate.toLocaleDateString() : ""}
+          onFocus={() => setShowStartCalendar(true)}
+          readOnly
         />
+        {showStartCalendar && (
+          <Calendar
+            onChange={(date) => {
+              setStartDate(date);
+              setShowStartCalendar(false);
+            }}
+            value={startDate}
+          />
+        )}
 
         <fieldset className="address">
           <legend>Address</legend>
@@ -138,7 +160,9 @@ const CreateEmployee = () => {
         </select>
       </form>
 
-      <button onClick={handleSave}>Save</button>
+      <div className="button-container">
+        <button onClick={handleSave}>Save</button>
+      </div>
 
       <Modal
         isOpen={modalIsOpen}
