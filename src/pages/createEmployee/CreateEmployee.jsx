@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
-import Modal from "react-modal";
 import { useEmployeeStore } from "../../store/employee.store";
 import { states } from "../../store/state";
 
@@ -16,18 +15,70 @@ const CreateEmployee = () => {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [department, setDepartment] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [showDobCalendar, setShowDobCalendar] = useState(false);
   const [showStartCalendar, setShowStartCalendar] = useState(false);
-
   const { setEmployees } = useEmployeeStore();
+
+  const dobCalendarRef = useRef(null);
+  const startCalendarRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        dobCalendarRef.current &&
+        !dobCalendarRef.current.contains(event.target)
+      ) {
+        setShowDobCalendar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  // Gérer la fermeture du calendrier de date de début
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        startCalendarRef.current &&
+        !startCalendarRef.current.contains(event.target)
+      ) {
+        setShowStartCalendar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  // Gérer la fermeture du calendrier avec la touche "Escape"
+  const handleEscapeKey = (event) => {
+    if (event.key === "Escape") {
+      setShowDobCalendar(false);
+      setShowStartCalendar(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, []);
 
   const handleSave = () => {
     const newEmployee = {
       firstName,
       lastName,
-      dateOfBirth: dateOfBirth.toLocaleDateString(),
-      startDate: startDate.toLocaleDateString(),
+      dateOfBirth: dateOfBirth ? dateOfBirth.toLocaleDateString() : "",
+      startDate: startDate ? startDate.toLocaleDateString() : "",
       street,
       city,
       state,
@@ -36,11 +87,19 @@ const CreateEmployee = () => {
     };
 
     setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
-    setModalIsOpen(true);
+    resetForm();
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const resetForm = () => {
+    setFirstName("");
+    setLastName("");
+    setDateOfBirth(null);
+    setStartDate(null);
+    setStreet("");
+    setCity("");
+    setState("");
+    setZipCode("");
+    setDepartment("");
   };
 
   return (
@@ -76,13 +135,15 @@ const CreateEmployee = () => {
           readOnly
         />
         {showDobCalendar && (
-          <Calendar
-            onChange={(date) => {
-              setDateOfBirth(date);
-              setShowDobCalendar(false);
-            }}
-            value={dateOfBirth}
-          />
+          <div ref={dobCalendarRef}>
+            <Calendar
+              onChange={(date) => {
+                setDateOfBirth(date);
+                setShowDobCalendar(false);
+              }}
+              value={dateOfBirth}
+            />
+          </div>
         )}
 
         <label htmlFor="start-date">Start Date</label>
@@ -94,13 +155,15 @@ const CreateEmployee = () => {
           readOnly
         />
         {showStartCalendar && (
-          <Calendar
-            onChange={(date) => {
-              setStartDate(date);
-              setShowStartCalendar(false);
-            }}
-            value={startDate}
-          />
+          <div ref={startCalendarRef}>
+            <Calendar
+              onChange={(date) => {
+                setStartDate(date);
+                setShowStartCalendar(false);
+              }}
+              value={startDate}
+            />
+          </div>
         )}
 
         <fieldset className="address">
@@ -158,22 +221,13 @@ const CreateEmployee = () => {
           <option value="Human Resources">Human Resources</option>
           <option value="Legal">Legal</option>
         </select>
+
+        <div className="button-container">
+          <button type="button" onClick={handleSave}>
+            Save
+          </button>
+        </div>
       </form>
-
-      <div className="button-container">
-        <button onClick={handleSave}>Save</button>
-      </div>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Employee Created"
-        className="modal"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Employee Created!</h2>
-        <button onClick={closeModal}>Close</button>
-      </Modal>
     </div>
   );
 };
