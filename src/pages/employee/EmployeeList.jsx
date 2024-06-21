@@ -1,13 +1,21 @@
+// src/components/EmployeeList/EmployeeList.jsx
 import React from "react";
 import "../../assets/css/EmployeeList.css";
 import { useEmployeeStore } from "../../store/employee.store";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeList = () => {
+  // Utiliser les données fictives au lieu du store
   const employees = useEmployeeStore((state) => state.employees);
+  const navigate = useNavigate(); // Initialisez useNavigate pour gérer la navigation
+
+  const handleCreateEmployee = () => {
+    navigate("/create-employee"); // Utilisez navigate pour rediriger vers la page de création d'employé
+  };
 
   return (
     <div className="employee-list-container">
-      <h2>Employee List</h2>
+      <h2 className="centered-title">Employee List</h2>
       <table className="employee-table">
         <thead>
           <tr>
@@ -23,8 +31,8 @@ const EmployeeList = () => {
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee, index) => (
-            <tr key={index}>
+          {employees.map((employee) => (
+            <tr key={employee.id}>
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.startDate}</td>
@@ -38,7 +46,9 @@ const EmployeeList = () => {
           ))}
         </tbody>
       </table>
-      <a href="/create-employee">Create New Employee</a>
+      <div className="button-container">
+        <button onClick={handleCreateEmployee}>Create New Employee</button>
+      </div>
     </div>
   );
 };
