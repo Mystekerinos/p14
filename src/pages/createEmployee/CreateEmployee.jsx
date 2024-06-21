@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "../../assets/css/createEmployee.css";
+import "../../assets/css/createEmployee.css"; // Assurez-vous que ce chemin est correct
 import { useEmployeeStore } from "../../store/employee.store";
 import { states } from "../../store/state";
 
@@ -22,6 +22,7 @@ const CreateEmployee = () => {
   const dobCalendarRef = useRef(null);
   const startCalendarRef = useRef(null);
 
+  // Gérer la fermeture du calendrier de date de naissance
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -104,6 +105,8 @@ const CreateEmployee = () => {
 
   return (
     <div className="container">
+      {" "}
+      {/* Ajouter la classe "container" pour le fond gris */}
       <div className="title">
         <h1>HRnet</h1>
       </div>
