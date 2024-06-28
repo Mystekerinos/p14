@@ -1,16 +1,14 @@
-// src/components/EmployeeList/EmployeeList.jsx
 import React from "react";
 import "../../assets/css/EmployeeList.css";
-import { useEmployeeStore } from "../../store/employee.store";
+import useEmployeeStore from "../../store/employee.store";
 import { useNavigate } from "react-router-dom";
 
 const EmployeeList = () => {
-  // Utiliser les données fictives au lieu du store
   const employees = useEmployeeStore((state) => state.employees);
-  const navigate = useNavigate(); // Initialisez useNavigate pour gérer la navigation
+  const navigate = useNavigate();
 
   const handleCreateEmployee = () => {
-    navigate("/create-employee"); // Utilisez navigate pour rediriger vers la page de création d'employé
+    navigate("/create-employee");
   };
 
   return (

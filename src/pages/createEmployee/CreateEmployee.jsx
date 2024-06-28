@@ -1,9 +1,62 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "../../assets/css/createEmployee.css"; // Assurez-vous que ce chemin est correct
-import { useEmployeeStore } from "../../store/employee.store";
-import { states } from "../../store/state";
+import "../../assets/css/createEmployee.css";
+import useEmployeeStore from "../../store/employee.store";
+
+const states = [
+  { abbreviation: "AL", name: "Alabama" },
+  { abbreviation: "AK", name: "Alaska" },
+  { abbreviation: "AZ", name: "Arizona" },
+  { abbreviation: "AR", name: "Arkansas" },
+  { abbreviation: "CA", name: "California" },
+  { abbreviation: "CO", name: "Colorado" },
+  { abbreviation: "CT", name: "Connecticut" },
+  { abbreviation: "DE", name: "Delaware" },
+  { abbreviation: "FL", name: "Florida" },
+  { abbreviation: "GA", name: "Georgia" },
+  { abbreviation: "HI", name: "Hawaii" },
+  { abbreviation: "ID", name: "Idaho" },
+  { abbreviation: "IL", name: "Illinois" },
+  { abbreviation: "IN", name: "Indiana" },
+  { abbreviation: "IA", name: "Iowa" },
+  { abbreviation: "KS", name: "Kansas" },
+  { abbreviation: "KY", name: "Kentucky" },
+  { abbreviation: "LA", name: "Louisiana" },
+  { abbreviation: "ME", name: "Maine" },
+  { abbreviation: "MD", name: "Maryland" },
+  { abbreviation: "MA", name: "Massachusetts" },
+  { abbreviation: "MI", name: "Michigan" },
+  { abbreviation: "MN", name: "Minnesota" },
+  { abbreviation: "MS", name: "Mississippi" },
+  { abbreviation: "MO", name: "Missouri" },
+  { abbreviation: "MT", name: "Montana" },
+  { abbreviation: "NE", name: "Nebraska" },
+  { abbreviation: "NV", name: "Nevada" },
+  { abbreviation: "NH", name: "New Hampshire" },
+  { abbreviation: "NJ", name: "New Jersey" },
+  { abbreviation: "NM", name: "New Mexico" },
+  { abbreviation: "NY", name: "New York" },
+  { abbreviation: "NC", name: "North Carolina" },
+  { abbreviation: "ND", name: "North Dakota" },
+  { abbreviation: "OH", name: "Ohio" },
+  { abbreviation: "OK", name: "Oklahoma" },
+  { abbreviation: "OR", name: "Oregon" },
+  { abbreviation: "PA", name: "Pennsylvania" },
+  { abbreviation: "RI", name: "Rhode Island" },
+  { abbreviation: "SC", name: "South Carolina" },
+  { abbreviation: "SD", name: "South Dakota" },
+  { abbreviation: "TN", name: "Tennessee" },
+  { abbreviation: "TX", name: "Texas" },
+  { abbreviation: "UT", name: "Utah" },
+  { abbreviation: "VT", name: "Vermont" },
+  { abbreviation: "VA", name: "Virginia" },
+  { abbreviation: "WA", name: "Washington" },
+  { abbreviation: "WV", name: "West Virginia" },
+  { abbreviation: "WI", name: "Wisconsin" },
+  { abbreviation: "WY", name: "Wyoming" },
+];
 
 const CreateEmployee = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,12 +70,24 @@ const CreateEmployee = () => {
   const [department, setDepartment] = useState("");
   const [showDobCalendar, setShowDobCalendar] = useState(false);
   const [showStartCalendar, setShowStartCalendar] = useState(false);
-  const { setEmployees } = useEmployeeStore();
+  const addEmployee = useEmployeeStore((state) => state.addEmployee);
+  const navigate = useNavigate();
 
   const dobCalendarRef = useRef(null);
   const startCalendarRef = useRef(null);
 
-  // Gérer la fermeture du calendrier de date de naissance
+  const resetForm = () => {
+    setFirstName("");
+    setLastName("");
+    setDateOfBirth(null);
+    setStartDate(null);
+    setStreet("");
+    setCity("");
+    setState("");
+    setZipCode("");
+    setDepartment("");
+  };
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -31,18 +96,6 @@ const CreateEmployee = () => {
       ) {
         setShowDobCalendar(false);
       }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
-  // Gérer la fermeture du calendrier de date de début
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
       if (
         startCalendarRef.current &&
         !startCalendarRef.current.contains(event.target)
@@ -58,7 +111,6 @@ const CreateEmployee = () => {
     };
   }, []);
 
-  // Gérer la fermeture du calendrier avec la touche "Escape"
   const handleEscapeKey = (event) => {
     if (event.key === "Escape") {
       setShowDobCalendar(false);
@@ -76,6 +128,7 @@ const CreateEmployee = () => {
 
   const handleSave = () => {
     const newEmployee = {
+      id: Math.random().toString(36).substr(2, 9),
       firstName,
       lastName,
       dateOfBirth: dateOfBirth ? dateOfBirth.toLocaleDateString() : "",
@@ -87,26 +140,15 @@ const CreateEmployee = () => {
       department,
     };
 
-    setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
-    resetForm();
-  };
+    console.log("newEmployee", newEmployee);
 
-  const resetForm = () => {
-    setFirstName("");
-    setLastName("");
-    setDateOfBirth(null);
-    setStartDate(null);
-    setStreet("");
-    setCity("");
-    setState("");
-    setZipCode("");
-    setDepartment("");
+    addEmployee(newEmployee);
+    resetForm();
+    navigate("/employee-list");
   };
 
   return (
     <div className="container">
-      {" "}
-      {/* Ajouter la classe "container" pour le fond gris */}
       <div className="title">
         <h1>HRnet</h1>
       </div>
