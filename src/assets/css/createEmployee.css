@@ -1,9 +1,12 @@
+
+
 .container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #f0f0f0;
 }
 
 .title {
@@ -42,9 +45,10 @@ select {
     justify-content: center;
     margin-top: 20px;
 }
+
 button {
     margin-top: 10px;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: black;
     border: none;
@@ -55,21 +59,14 @@ button:hover {
     background-color: #0056b3;
 }
 
-.container {
-    background-color: #f0f0f0;
- 
-    padding: 20px;
- 
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
 }
-
 
 @media (max-width: 768px) {
     .button-container {
         margin-top: 15px;
     }
-}
-
-.button-container button {
-    padding: 10px 20px;
-    font-size: 16px;
 }

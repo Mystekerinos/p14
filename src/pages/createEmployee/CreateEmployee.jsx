@@ -4,6 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
 import useEmployeeStore from "../../store/employee.store";
+import Modal from "../../components/modal/Modal";
 
 const states = [
   { abbreviation: "AL", name: "Alabama" },
@@ -70,23 +71,24 @@ const CreateEmployee = () => {
   const [department, setDepartment] = useState("");
   const [showDobCalendar, setShowDobCalendar] = useState(false);
   const [showStartCalendar, setShowStartCalendar] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    firstName: false,
+    lastName: false,
+    dateOfBirth: false,
+    startDate: false,
+    street: false,
+    city: false,
+    state: false,
+    zipCode: false,
+    department: false,
+  });
+
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const navigate = useNavigate();
 
   const dobCalendarRef = useRef(null);
   const startCalendarRef = useRef(null);
-
-  const resetForm = () => {
-    setFirstName("");
-    setLastName("");
-    setDateOfBirth(null);
-    setStartDate(null);
-    setStreet("");
-    setCity("");
-    setState("");
-    setZipCode("");
-    setDepartment("");
-  };
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -126,24 +128,70 @@ const CreateEmployee = () => {
     };
   }, []);
 
-  const handleSave = () => {
-    const newEmployee = {
-      id: Math.random().toString(36).substr(2, 9),
-      firstName,
-      lastName,
-      dateOfBirth: dateOfBirth ? dateOfBirth.toLocaleDateString() : "",
-      startDate: startDate ? startDate.toLocaleDateString() : "",
-      street,
-      city,
-      state,
-      zipCode,
-      department,
+  const validateForm = () => {
+    const errors = {
+      firstName: firstName === "",
+      lastName: lastName === "",
+      dateOfBirth: !dateOfBirth,
+      startDate: !startDate,
+      street: street === "",
+      city: city === "",
+      state: state === "",
+      zipCode: zipCode === "",
+      department: department === "",
     };
 
-    console.log("newEmployee", newEmployee);
+    setFormErrors(errors);
 
-    addEmployee(newEmployee);
-    resetForm();
+    return Object.values(errors).every((error) => !error);
+  };
+
+  const handleSave = () => {
+    if (validateForm()) {
+      const newEmployee = {
+        id: Math.random().toString(36).substr(2, 9),
+        firstName,
+        lastName,
+        dateOfBirth: dateOfBirth ? dateOfBirth.toISOString().split("T")[0] : "",
+        startDate: startDate ? startDate.toISOString().split("T")[0] : "",
+        street,
+        city,
+        state,
+        zipCode,
+        department,
+      };
+
+      addEmployee(newEmployee);
+      resetForm();
+      setModalIsOpen(true);
+    }
+  };
+
+  const resetForm = () => {
+    setFirstName("");
+    setLastName("");
+    setDateOfBirth(null);
+    setStartDate(null);
+    setStreet("");
+    setCity("");
+    setState("");
+    setZipCode("");
+    setDepartment("");
+    setFormErrors({
+      firstName: false,
+      lastName: false,
+      dateOfBirth: false,
+      startDate: false,
+      street: false,
+      city: false,
+      state: false,
+      zipCode: false,
+      department: false,
+    });
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
     navigate("/employee-list");
   };
 
@@ -153,30 +201,34 @@ const CreateEmployee = () => {
         <h1>HRnet</h1>
       </div>
       <a href="/employee-list">View Current Employees</a>
-      <h2>Create Employee</h2>
-      <form id="create-employee">
-        <label htmlFor="first-name">First Name</label>
+      <h2 className="title">Create Employee</h2>
+      <form>
+        <label htmlFor="firstName">First Name</label>
         <input
+          id="firstName"
           type="text"
-          id="first-name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
         />
+        {formErrors.firstName && (
+          <p className="error">Please enter First Name</p>
+        )}
 
-        <label htmlFor="last-name">Last Name</label>
+        <label htmlFor="lastName">Last Name</label>
         <input
+          id="lastName"
           type="text"
-          id="last-name"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
         />
+        {formErrors.lastName && <p className="error">Please enter Last Name</p>}
 
-        <label htmlFor="date-of-birth">Date of Birth</label>
+        <label htmlFor="dateOfBirth">Date of Birth</label>
         <input
+          id="dateOfBirth"
           type="text"
-          id="date-of-birth"
           value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
-          onFocus={() => setShowDobCalendar(true)}
+          onClick={() => setShowDobCalendar(true)}
           readOnly
         />
         {showDobCalendar && (
@@ -190,13 +242,16 @@ const CreateEmployee = () => {
             />
           </div>
         )}
+        {formErrors.dateOfBirth && (
+          <p className="error">Please select Date of Birth</p>
+        )}
 
-        <label htmlFor="start-date">Start Date</label>
+        <label htmlFor="startDate">Start Date</label>
         <input
+          id="startDate"
           type="text"
-          id="start-date"
           value={startDate ? startDate.toLocaleDateString() : ""}
-          onFocus={() => setShowStartCalendar(true)}
+          onClick={() => setShowStartCalendar(true)}
           readOnly
         />
         {showStartCalendar && (
@@ -210,48 +265,51 @@ const CreateEmployee = () => {
             />
           </div>
         )}
+        {formErrors.startDate && (
+          <p className="error">Please select Start Date</p>
+        )}
 
-        <fieldset className="address">
-          <legend>Address</legend>
+        <label htmlFor="street">Street</label>
+        <input
+          id="street"
+          type="text"
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
+        />
+        {formErrors.street && <p className="error">Please enter Street</p>}
 
-          <label htmlFor="street">Street</label>
-          <input
-            type="text"
-            id="street"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-          />
+        <label htmlFor="city">City</label>
+        <input
+          id="city"
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+        {formErrors.city && <p className="error">Please enter City</p>}
 
-          <label htmlFor="city">City</label>
-          <input
-            type="text"
-            id="city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
+        <label htmlFor="state">State</label>
+        <select
+          id="state"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+        >
+          <option value="">Select State</option>
+          {states.map((state) => (
+            <option key={state.abbreviation} value={state.abbreviation}>
+              {state.name}
+            </option>
+          ))}
+        </select>
+        {formErrors.state && <p className="error">Please select a State</p>}
 
-          <label htmlFor="state">State</label>
-          <select
-            id="state"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          >
-            <option value="">Select State</option>
-            {states.map((state) => (
-              <option key={state.abbreviation} value={state.abbreviation}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-
-          <label htmlFor="zip-code">Zip Code</label>
-          <input
-            type="number"
-            id="zip-code"
-            value={zipCode}
-            onChange={(e) => setZipCode(e.target.value)}
-          />
-        </fieldset>
+        <label htmlFor="zipCode">Zip Code</label>
+        <input
+          id="zipCode"
+          type="text"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+        />
+        {formErrors.zipCode && <p className="error">Please enter Zip Code</p>}
 
         <label htmlFor="department">Department</label>
         <select
@@ -266,6 +324,9 @@ const CreateEmployee = () => {
           <option value="Human Resources">Human Resources</option>
           <option value="Legal">Legal</option>
         </select>
+        {formErrors.department && (
+          <p className="error">Please select a Department</p>
+        )}
 
         <div className="button-container">
           <button type="button" onClick={handleSave}>
@@ -273,6 +334,10 @@ const CreateEmployee = () => {
           </button>
         </div>
       </form>
+
+      {modalIsOpen && (
+        <Modal message="Employee Created!" onClose={closeModal} />
+      )}
     </div>
   );
 };
