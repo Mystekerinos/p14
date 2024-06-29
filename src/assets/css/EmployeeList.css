@@ -1,45 +1,43 @@
-.employee-list-container {
-    max-width: 800px;
-    margin: 20px auto;
-}
-
-.employee-table {
+/* CSS spécifique pour AG Grid */
+.ag-theme-alpine {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    height: 400px;
 }
 
-.employee-table th,
-.employee-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+.ag-theme-alpine .ag-header {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+}
+
+.ag-theme-alpine .ag-header-cell-text {
+    font-weight: bold;
     text-align: left;
 }
 
-.employee-table th {
+.ag-theme-alpine .ag-row {
+    border-bottom: 1px solid #ddd;
+}
+
+.ag-theme-alpine .ag-row:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-.employee-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.employee-table tbody tr:hover {
+.ag-theme-alpine .ag-row:hover {
     background-color: #ddd;
 }
 
-.employee-list-container a {
-    display: block;
-    margin-top: 20px;
-    text-align: center;
-    text-decoration: none;
+.ag-theme-alpine .ag-cell {
+    padding: 8px;
 }
-.employee-list-container {
-    text-align: center;
+
+/* Ajustements pour les boutons et autres éléments */
+.button-container {
+    margin-top: 20px;
 }
 
 .centered-title {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 @media screen and (max-width: 600px) {
