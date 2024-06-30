@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -11,6 +11,7 @@ const EmployeeList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
+  const [pageSize, setPageSize] = useState(5);
 
   const handleCreateEmployee = () => {
     navigate("/create-employee");
@@ -18,18 +19,48 @@ const EmployeeList = () => {
 
   const columnDefs = useMemo(
     () => [
-      { headerName: "First Name", field: "firstName" },
-      { headerName: "Last Name", field: "lastName" },
-      { headerName: "Start Date", field: "startDate" },
-      { headerName: "Department", field: "department" },
-      { headerName: "Date of Birth", field: "dateOfBirth" },
+      { headerName: "First Name", field: "firstName", sortable: true },
+      { headerName: "Last Name", field: "lastName", sortable: true },
+      {
+        headerName: "Start Date",
+        field: "startDate",
+        sortable: true,
+        valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+      },
+      { headerName: "Department", field: "department", sortable: true },
+      {
+        headerName: "Date of Birth",
+        field: "dateOfBirth",
+        sortable: true,
+        valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+      },
       { headerName: "Street", field: "street" },
       { headerName: "City", field: "city" },
       { headerName: "State", field: "state" },
       { headerName: "Zip Code", field: "zipCode" },
+      {
+        headerName: "",
+        field: "actions",
+        cellRendererFramework: (params) => (
+          <div>
+            <button onClick={() => handleDelete(params.data)}>Delete</button>
+            <button onClick={() => handleUpdate(params.data)}>Update</button>
+          </div>
+        ),
+      },
     ],
     []
   );
+
+  const handleDelete = useCallback((employee) => {
+    // Your delete logic here
+    console.log("Delete employee", employee);
+  }, []);
+
+  const handleUpdate = useCallback((employee) => {
+    // Your update logic here
+    console.log("Update employee", employee);
+  }, []);
 
   const filteredEmployees = useMemo(() => {
     let filtered = employees;
@@ -62,11 +93,15 @@ const EmployeeList = () => {
     setDepartmentFilter(event.target.value);
   };
 
+  const handlePageSizeChange = (event) => {
+    setPageSize(Number(event.target.value));
+  };
+
   return (
     <div className="employee-list-container">
-      <h2 className="centered-title">Employee List</h2>
+      <h2 className="centered-title">Current Employees</h2>
 
-      {/* Champ de recherche */}
+      {/* Search and Filter */}
       <div className="filter-container">
         <div>
           <label htmlFor="search">Search:</label>
@@ -78,7 +113,6 @@ const EmployeeList = () => {
           />
         </div>
 
-        {/* Filtre par département */}
         <div>
           <span>Select employees by department:</span>
           <label>
@@ -144,14 +178,28 @@ const EmployeeList = () => {
         </div>
       </div>
 
-      <div className="ag-theme-alpine">
+      {/* Page Size */}
+      <div className="page-size-container">
+        <label htmlFor="pageSize">Show </label>
+        <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+        </select>
+        <span> entries</span>
+      </div>
+
+      {/* Table */}
+      <div className="ag-theme-alpine custom-grid">
         <AgGridReact
           rowData={filteredEmployees}
           columnDefs={columnDefs}
           pagination={true}
-          paginationPageSize={10}
+          paginationPageSize={pageSize}
         />
       </div>
+
+      {/* Create Button */}
       <div className="button-container">
         <button onClick={handleCreateEmployee}>Create New Employee</button>
       </div>

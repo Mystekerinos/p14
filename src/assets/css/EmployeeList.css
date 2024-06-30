@@ -1,47 +1,85 @@
-/* CSS spécifique pour AG Grid */
-.ag-theme-alpine {
-    width: 100%;
-    height: 400px;
-}
-
-.ag-theme-alpine .ag-header {
-    background-color: #f2f2f2;
-    border-bottom: 1px solid #ddd;
-}
-
-.ag-theme-alpine .ag-header-cell-text {
-    font-weight: bold;
-    text-align: left;
-}
-
-.ag-theme-alpine .ag-row {
-    border-bottom: 1px solid #ddd;
-}
-
+/* Alternating row colors */
 .ag-theme-alpine .ag-row:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #d3d3d3;
 }
 
-.ag-theme-alpine .ag-row:hover {
-    background-color: #ddd;
+.ag-theme-alpine .ag-row:nth-child(odd) {
+  background-color: #ffffff;
 }
 
-.ag-theme-alpine .ag-cell {
-    padding: 8px;
-}
-
-/* Ajustements pour les boutons et autres éléments */
-.button-container {
-    margin-top: 20px;
+/* Rest of your CSS */
+.employee-list-container {
+  background-color: #b7b9a777;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .centered-title {
-    margin-bottom: 20px;
-    text-align: center;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #5a5a5a;
 }
 
-@media screen and (max-width: 600px) {
-    .centered-title {
-        font-size: 1.5rem;
-    }
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-container div {
+  display: flex;
+  align-items: center;
+}
+
+#search {
+  margin-left: 8px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-container span {
+  margin-right: 8px;
+}
+
+.filter-container label {
+  margin-right: 8px;
+}
+
+.page-size-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#pageSize {
+  margin-left: 8px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.custom-grid {
+  width: 100%;
+  height: 400px;
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #8fbf5a;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #7aae4d;
 }
