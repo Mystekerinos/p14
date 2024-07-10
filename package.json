@@ -11,6 +11,7 @@
     "jquery-datetimepicker": "^2.5.21",
     "react": "^18.3.1",
     "react-calendar": "^5.0.0",
+    "react-custom-modals": "^0.1.5",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
@@ -42,5 +43,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7"
   }
 }

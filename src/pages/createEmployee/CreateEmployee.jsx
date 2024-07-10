@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
 import useEmployeeStore from "../../store/employee.store";
-import Modal from "../../components/modal/Modal";
+import { Modal } from "react-custom-modals";
 
 const states = [
   { abbreviation: "AL", name: "Alabama" },
