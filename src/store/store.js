@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storageSession from "redux-persist/lib/storage/session"; // Utilisation de sessionStorage pour la persistance
+import storage from "redux-persist/lib/storage"; // Utilisation de localStorage pour la persistance
 import employeesReducer from "../slices/employeesSlice";
 
 const rootReducer = combineReducers({
@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: "root",
-  storage: storageSession,
+  storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
