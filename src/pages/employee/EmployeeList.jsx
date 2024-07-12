@@ -1,17 +1,23 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { AgGridReact } from "ag-grid-react";
+import { useNavigate } from "react-router-dom";
+import { fetchEmployees, deleteEmployee } from "../../slices/employeesSlice";
+import "../../assets/css/EmployeeList.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import useEmployeeStore from "../../store/employee.store";
-import { useNavigate } from "react-router-dom";
-import "../../assets/css/EmployeeList.css";
 
 const EmployeeList = () => {
-  const employees = useEmployeeStore((state) => state.employees);
+  const employees = useSelector((state) => state.employees.employees);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [pageSize, setPageSize] = useState(5);
+
+  useEffect(() => {
+    dispatch(fetchEmployees());
+  }, [dispatch]);
 
   const handleCreateEmployee = () => {
     navigate("/create-employee");
@@ -52,20 +58,23 @@ const EmployeeList = () => {
     []
   );
 
-  const handleDelete = useCallback((employee) => {
-    // Your delete logic here
-    console.log("Delete employee", employee);
-  }, []);
+  const handleDelete = (employee) => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
+      )
+    ) {
+      dispatch(deleteEmployee(employee.id));
+    }
+  };
 
-  const handleUpdate = useCallback((employee) => {
-    // Your update logic here
-    console.log("Update employee", employee);
-  }, []);
+  const handleUpdate = (employee) => {
+    navigate(`/edit-employee/${employee.id}`);
+  };
 
   const filteredEmployees = useMemo(() => {
     let filtered = employees;
 
-    // Filtrage par terme de recherche
     if (searchTerm) {
       const normalizedSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -75,7 +84,6 @@ const EmployeeList = () => {
       );
     }
 
-    // Filtrage par département
     if (departmentFilter) {
       filtered = filtered.filter(
         (employee) => employee.department === departmentFilter
@@ -85,16 +93,16 @@ const EmployeeList = () => {
     return filtered;
   }, [employees, searchTerm, departmentFilter]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleDepartmentFilterChange = (event) => {
-    setDepartmentFilter(event.target.value);
+  const handleDepartmentFilterChange = (e) => {
+    setDepartmentFilter(e.target.value);
   };
 
-  const handlePageSizeChange = (event) => {
-    setPageSize(Number(event.target.value));
+  const handlePageSizeChange = (e) => {
+    setPageSize(Number(e.target.value));
   };
 
   return (

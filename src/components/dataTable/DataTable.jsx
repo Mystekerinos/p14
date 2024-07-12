@@ -5,7 +5,7 @@ import {
   useFilters,
   useGlobalFilter,
 } from "react-table";
-import { useEmployeeStore } from "../store/employee.store";
+import { useSelector, useDispatch } from "react-redux";
 import "./DataTable.css";
 
 function GlobalFilter({
@@ -35,7 +35,8 @@ function GlobalFilter({
 }
 
 const DataTable = () => {
-  const employees = useEmployeeStore((state) => state.employees);
+  const employees = useSelector((state) => state.employees.employees);
+  const dispatch = useDispatch();
 
   const columns = useMemo(
     () => [
@@ -70,7 +71,11 @@ const DataTable = () => {
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 5 } },
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 5 },
+    },
     useFilters,
     useGlobalFilter,
     usePagination

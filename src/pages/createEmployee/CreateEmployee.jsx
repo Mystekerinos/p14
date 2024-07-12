@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
-import useEmployeeStore from "../../store/employee.store";
+import { useDispatch } from "react-redux";
+import { addEmployee } from "../../slices/employeesSlice";
 import { Modal } from "react-custom-modals";
-
 const states = [
   { abbreviation: "AL", name: "Alabama" },
   { abbreviation: "AK", name: "Alaska" },
@@ -84,67 +84,8 @@ const CreateEmployee = () => {
     department: false,
   });
 
-  const addEmployee = useEmployeeStore((state) => state.addEmployee);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const dobCalendarRef = useRef(null);
-  const startCalendarRef = useRef(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (
-        dobCalendarRef.current &&
-        !dobCalendarRef.current.contains(event.target)
-      ) {
-        setShowDobCalendar(false);
-      }
-      if (
-        startCalendarRef.current &&
-        !startCalendarRef.current.contains(event.target)
-      ) {
-        setShowStartCalendar(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
-  const handleEscapeKey = (event) => {
-    if (event.key === "Escape") {
-      setShowDobCalendar(false);
-      setShowStartCalendar(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleEscapeKey);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, []);
-
-  const validateForm = () => {
-    const errors = {
-      firstName: firstName === "",
-      lastName: lastName === "",
-      dateOfBirth: !dateOfBirth,
-      startDate: !startDate,
-      street: street === "",
-      city: city === "",
-      state: state === "",
-      zipCode: zipCode === "",
-      department: department === "",
-    };
-
-    setFormErrors(errors);
-
-    return Object.values(errors).every((error) => !error);
-  };
 
   const handleSave = () => {
     if (validateForm()) {
@@ -161,10 +102,27 @@ const CreateEmployee = () => {
         department,
       };
 
-      addEmployee(newEmployee);
-      resetForm();
+      dispatch(addEmployee(newEmployee));
       setModalIsOpen(true);
     }
+  };
+
+  const validateForm = () => {
+    const errors = {
+      firstName: firstName.trim() === "",
+      lastName: lastName.trim() === "",
+      dateOfBirth: !dateOfBirth,
+      startDate: !startDate,
+      street: street.trim() === "",
+      city: city.trim() === "",
+      state: state.trim() === "",
+      zipCode: zipCode.trim() === "",
+      department: department.trim() === "",
+    };
+
+    setFormErrors(errors);
+
+    return Object.values(errors).every((error) => !error);
   };
 
   const resetForm = () => {
@@ -232,7 +190,7 @@ const CreateEmployee = () => {
           readOnly
         />
         {showDobCalendar && (
-          <div ref={dobCalendarRef}>
+          <div>
             <Calendar
               onChange={(date) => {
                 setDateOfBirth(date);
@@ -255,7 +213,7 @@ const CreateEmployee = () => {
           readOnly
         />
         {showStartCalendar && (
-          <div ref={startCalendarRef}>
+          <div>
             <Calendar
               onChange={(date) => {
                 setStartDate(date);
