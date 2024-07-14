@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AgGridReact } from "ag-grid-react";
 import { useNavigate } from "react-router-dom";
 import { fetchEmployees, deleteEmployee } from "../../slices/employeesSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/css/EmployeeList.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -21,6 +23,16 @@ const EmployeeList = () => {
 
   const handleCreateEmployee = () => {
     navigate("/create-employee");
+  };
+
+  const handleDelete = (employee) => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
+      )
+    ) {
+      dispatch(deleteEmployee(employee.id));
+    }
   };
 
   const columnDefs = useMemo(
@@ -45,32 +57,21 @@ const EmployeeList = () => {
       { headerName: "State", field: "state" },
       { headerName: "Zip Code", field: "zipCode" },
       {
-        headerName: "",
+        headerName: "Actions",
         field: "actions",
-        cellRendererFramework: (params) => (
-          <div>
-            <button onClick={() => handleDelete(params.data)}>Delete</button>
-            <button onClick={() => handleUpdate(params.data)}>Update</button>
-          </div>
-        ),
+        cellRenderer: (params) => {
+          const handleDeleteClick = () => handleDelete(params.data);
+
+          return (
+            <button className="delete-button" onClick={handleDeleteClick}>
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          );
+        },
       },
     ],
-    []
+    [handleDelete]
   );
-
-  const handleDelete = (employee) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-      )
-    ) {
-      dispatch(deleteEmployee(employee.id));
-    }
-  };
-
-  const handleUpdate = (employee) => {
-    navigate(`/edit-employee/${employee.id}`);
-  };
 
   const filteredEmployees = useMemo(() => {
     let filtered = employees;
@@ -197,7 +198,7 @@ const EmployeeList = () => {
         <span> entries</span>
       </div>
 
-      {/* Table */}
+      {/* Ag-Grid Table */}
       <div className="ag-theme-alpine custom-grid">
         <AgGridReact
           rowData={filteredEmployees}
