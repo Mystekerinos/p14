@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import CreateEmployee from "./pages/createEmployee/CreateEmployee";
-import EmployeeList from "./pages/employee/EmployeeList";
+import EmployeeList from "./pages/employeeList/EmployeeList";
 
 const App = () => {
   return (
