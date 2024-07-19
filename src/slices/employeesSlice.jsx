@@ -1,16 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-export const fetchEmployees = createAsyncThunk(
-  "employees/fetchEmployees",
-  async () => {
-    const response = await fetch("/api/employees");
-    if (!response.ok) {
-      throw new Error("Failed to fetch employees");
-    }
-    const data = await response.json();
-    return data;
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
 
 const employeesSlice = createSlice({
   name: "employees",
@@ -39,20 +27,6 @@ const employeesSlice = createSlice({
         state.employees[index] = action.payload;
       }
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchEmployees.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchEmployees.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.employees = action.payload;
-      })
-      .addCase(fetchEmployees.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      });
   },
 });
 

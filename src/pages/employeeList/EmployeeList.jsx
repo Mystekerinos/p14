@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AgGridReact } from "ag-grid-react";
 import { useNavigate } from "react-router-dom";
-import { fetchEmployees, deleteEmployee } from "../../slices/employeesSlice";
+import { deleteEmployee } from "../../slices/employeesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/css/EmployeeList.css";
@@ -17,24 +17,26 @@ const EmployeeList = () => {
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [pageSize, setPageSize] = useState(5);
 
-  useEffect(() => {
-    dispatch(fetchEmployees());
-  }, [dispatch]);
-
-  const handleCreateEmployee = () => {
+  // Navigate to create employee page
+  const handleCreateEmployee = useCallback(() => {
     navigate("/create-employee");
-  };
+  }, [navigate]);
 
-  const handleDelete = (employee) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-      )
-    ) {
-      dispatch(deleteEmployee(employee.id));
-    }
-  };
+  // Handle employee deletion
+  const handleDelete = useCallback(
+    (employee) => {
+      if (
+        window.confirm(
+          `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
+        )
+      ) {
+        dispatch(deleteEmployee(employee.id));
+      }
+    },
+    [dispatch]
+  );
 
+  // Column definitions for ag-grid
   const columnDefs = useMemo(
     () => [
       { headerName: "First Name", field: "firstName", sortable: true },
@@ -43,14 +45,14 @@ const EmployeeList = () => {
         headerName: "Start Date",
         field: "startDate",
         sortable: true,
-        valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+        valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
       { headerName: "Department", field: "department", sortable: true },
       {
         headerName: "Date of Birth",
         field: "dateOfBirth",
         sortable: true,
-        valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+        valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
       },
       { headerName: "Street", field: "street" },
       { headerName: "City", field: "city" },
@@ -59,20 +61,17 @@ const EmployeeList = () => {
       {
         headerName: "Actions",
         field: "actions",
-        cellRenderer: (params) => {
-          const handleDeleteClick = () => handleDelete(params.data);
-
-          return (
-            <button className="delete-button" onClick={handleDeleteClick}>
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
-          );
-        },
+        cellRendererFramework: ({ data }) => (
+          <button className="delete-button" onClick={() => handleDelete(data)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        ),
       },
     ],
     [handleDelete]
   );
 
+  // Filter employees based on search and department
   const filteredEmployees = useMemo(() => {
     let filtered = employees;
 
@@ -94,18 +93,6 @@ const EmployeeList = () => {
     return filtered;
   }, [employees, searchTerm, departmentFilter]);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleDepartmentFilterChange = (e) => {
-    setDepartmentFilter(e.target.value);
-  };
-
-  const handlePageSizeChange = (e) => {
-    setPageSize(Number(e.target.value));
-  };
-
   return (
     <div className="employee-list-container">
       <h2 className="centered-title">Current Employees</h2>
@@ -118,82 +105,47 @@ const EmployeeList = () => {
             type="text"
             id="search"
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         <div>
           <span>Select employees by department:</span>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value=""
-              onChange={handleDepartmentFilterChange}
-              checked={!departmentFilter}
-            />
-            All
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value="Sales"
-              onChange={handleDepartmentFilterChange}
-              checked={departmentFilter === "Sales"}
-            />
-            Sales
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value="Marketing"
-              onChange={handleDepartmentFilterChange}
-              checked={departmentFilter === "Marketing"}
-            />
-            Marketing
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value="Engineering"
-              onChange={handleDepartmentFilterChange}
-              checked={departmentFilter === "Engineering"}
-            />
-            Engineering
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value="Human Resources"
-              onChange={handleDepartmentFilterChange}
-              checked={departmentFilter === "Human Resources"}
-            />
-            Human Resources
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="departmentFilter"
-              value="Legal"
-              onChange={handleDepartmentFilterChange}
-              checked={departmentFilter === "Legal"}
-            />
-            Legal
-          </label>
+          {[
+            "",
+            "Sales",
+            "Marketing",
+            "Engineering",
+            "Human Resources",
+            "Legal",
+          ].map((dept) => (
+            <label key={dept}>
+              <input
+                type="radio"
+                name="departmentFilter"
+                value={dept}
+                onChange={(e) => setDepartmentFilter(e.target.value)}
+                checked={departmentFilter === dept}
+              />
+              {dept || "All"}
+            </label>
+          ))}
         </div>
       </div>
 
       {/* Page Size */}
       <div className="page-size-container">
         <label htmlFor="pageSize">Show </label>
-        <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={15}>15</option>
+        <select
+          id="pageSize"
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+        >
+          {[5, 10, 15].map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
         </select>
         <span> entries</span>
       </div>
