@@ -104,6 +104,7 @@ const CreateEmployee = () => {
 
       dispatch(addEmployee(newEmployee));
       setModalIsOpen(true);
+      resetForm();
     }
   };
 
