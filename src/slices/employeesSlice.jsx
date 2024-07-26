@@ -19,18 +19,9 @@ const employeesSlice = createSlice({
         (employee) => employee.id !== action.payload
       );
     },
-    updateEmployee: (state, action) => {
-      const index = state.employees.findIndex(
-        (employee) => employee.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.employees[index] = action.payload;
-      }
-    },
   },
 });
 
-export const { addEmployee, deleteEmployee, updateEmployee } =
-  employeesSlice.actions;
+export const { addEmployee, deleteEmployee } = employeesSlice.actions;
 
 export default employeesSlice.reducer;
