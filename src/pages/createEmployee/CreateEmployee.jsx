@@ -6,6 +6,7 @@ import "../../assets/css/createEmployee.css";
 import { useDispatch } from "react-redux";
 import { addEmployee } from "../../slices/employeesSlice";
 import { Modal } from "react-custom-modals";
+
 const states = [
   { abbreviation: "AL", name: "Alabama" },
   { abbreviation: "AK", name: "Alaska" },
@@ -295,7 +296,13 @@ const CreateEmployee = () => {
       </form>
 
       {modalIsOpen && (
-        <Modal message="Employee Created!" onClose={closeModal} />
+        <Modal
+          message="Employee Created!"
+          onClose={closeModal}
+          showCloseButton={false}
+          backgroundColor="#f0f0f0"
+          closeOnOutsideClick={true}
+        />
       )}
     </div>
   );
