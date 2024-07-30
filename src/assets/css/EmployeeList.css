@@ -1,4 +1,4 @@
-/* Alternating row colors */
+
 .ag-theme-alpine .ag-row:nth-child(even) {
   background-color: #d3d3d3;
 }
@@ -7,7 +7,7 @@
   background-color: #ffffff;
 }
 
-/* Employee list container */
+
 .employee-list-container {
   background-color: #b7b9a777;
   padding: 20px;
@@ -16,7 +16,7 @@
   margin: 0 auto;
 }
 
-/* Centered title */
+
 .centered-title {
   margin-bottom: 20px;
   text-align: center;
@@ -24,7 +24,7 @@
   color: #5a5a5a;
 }
 
-/* Filter container */
+
 .filter-container {
   display: flex;
   justify-content: space-between;
@@ -38,7 +38,7 @@
   margin-bottom: 10px;
 }
 
-/* Search input */
+
 #search {
   margin-left: 8px;
   padding: 4px;
@@ -46,7 +46,7 @@
   border-radius: 4px;
 }
 
-/* Filter labels and spans */
+
 .filter-container span {
   margin-right: 8px;
 }
@@ -55,7 +55,7 @@
   margin-right: 8px;
 }
 
-/* Page size container */
+
 .page-size-container {
   display: flex;
   align-items: center;
@@ -70,13 +70,12 @@
   border-radius: 4px;
 }
 
-/* Grid container */
+
 .custom-grid {
   width: 100%;
   height: 400px;
 }
 
-/* Button container */
 .button-container {
   margin-top: 20px;
   text-align: center;
@@ -100,7 +99,7 @@
   justify-content: center;
 }
 
-/* Media queries for responsiveness */
+
 @media (max-width: 1024px) {
   .filter-container {
     flex-direction: column;
@@ -146,7 +145,7 @@
 
 
 
-/* Media queries for responsiveness */
+
 @media (max-width: 768px) {
 
 

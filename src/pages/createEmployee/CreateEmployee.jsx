@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../assets/css/createEmployee.css";
 import { useDispatch } from "react-redux";
-import { addEmployee } from "../../slices/employeesSlice";
+import { addEmployee } from "../../reducers/employeesSlice";
 import { Modal } from "react-custom-modals";
 
 const states = [

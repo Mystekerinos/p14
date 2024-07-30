@@ -2,10 +2,10 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AgGridReact } from "ag-grid-react";
 import { useNavigate } from "react-router-dom";
-import { deleteEmployee } from "../../slices/employeesSlice";
+import { deleteEmployee } from "../../reducers/employeesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import "../../assets/css/EmployeeList.css";
+import "../../assets/css/employeeList.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
@@ -17,12 +17,10 @@ const EmployeeList = () => {
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [pageSize, setPageSize] = useState(5);
 
-  // Navigate to create employee page
   const handleCreateEmployee = useCallback(() => {
     navigate("/create-employee");
   }, [navigate]);
 
-  // Handle employee deletion
   const handleDelete = useCallback(
     (employee) => {
       if (
@@ -36,7 +34,6 @@ const EmployeeList = () => {
     [dispatch]
   );
 
-  // Column definitions for ag-grid
   const columnDefs = useMemo(
     () => [
       { headerName: "First Name", field: "firstName", sortable: true },
@@ -71,7 +68,6 @@ const EmployeeList = () => {
     [handleDelete]
   );
 
-  // Filter employees based on search and department
   const filteredEmployees = useMemo(() => {
     let filtered = employees;
 
@@ -97,7 +93,6 @@ const EmployeeList = () => {
     <div className="employee-list-container">
       <h2 className="centered-title">Current Employees</h2>
 
-      {/* Search and Filter */}
       <div className="filter-container">
         <div>
           <label htmlFor="search">Search:</label>
@@ -133,7 +128,6 @@ const EmployeeList = () => {
         </div>
       </div>
 
-      {/* Page Size */}
       <div className="page-size-container">
         <label htmlFor="pageSize">Show </label>
         <select
@@ -150,7 +144,6 @@ const EmployeeList = () => {
         <span> entries</span>
       </div>
 
-      {/* Ag-Grid Table */}
       <div className="ag-theme-alpine custom-grid">
         <AgGridReact
           rowData={filteredEmployees}
@@ -160,7 +153,6 @@ const EmployeeList = () => {
         />
       </div>
 
-      {/* Create Button */}
       <div className="button-container">
         <button onClick={handleCreateEmployee}>Create New Employee</button>
       </div>
