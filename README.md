@@ -7,6 +7,8 @@
 
 
 
+**Technologies:** 
+
 . Visual Studio code
 
 . Javascript
