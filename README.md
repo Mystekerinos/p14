@@ -5,12 +5,20 @@
 <img width="836" alt="Capture d’écran 2024-09-01 à 22 41 34" src="https://github.com/user-attachments/assets/9d6946f1-bd6b-41c6-93ca-c89921c3dd1d">
 
 
+
+
 . Visual Studio code
+
 . Javascript
+
 . Npm 
+
 . NodeJS 
+
 . React 
+
 . React-router-dom
+
 
 
 **Conversion des plugins jQuery en composants React.**
