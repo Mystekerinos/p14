@@ -2,10 +2,7 @@
 
 # p14: Faites passer une librairie jQuery vers React
 
-<img width="849" alt="Capture d’écran 2024-09-01 à 22 38 28" src="https://github.com/user-attachments/assets/67cfdda8-dff6-45ce-9a8a-03b79054c221">
-
-
-<img width="848" alt="Capture d’écran 2024-09-01 à 22 38 35" src="https://github.com/user-attachments/assets/3c4b9fcf-5825-4c46-9f59-57b0a7750f0c">
+<img width="836" alt="Capture d’écran 2024-09-01 à 22 41 34" src="https://github.com/user-attachments/assets/9d6946f1-bd6b-41c6-93ca-c89921c3dd1d">
 
 
 . Visual Studio code
