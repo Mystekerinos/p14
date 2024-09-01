@@ -2,6 +2,12 @@
 
 # p14: Faites passer une librairie jQuery vers React
 
+<img width="849" alt="Capture d’écran 2024-09-01 à 22 38 28" src="https://github.com/user-attachments/assets/67cfdda8-dff6-45ce-9a8a-03b79054c221">
+
+
+<img width="848" alt="Capture d’écran 2024-09-01 à 22 38 35" src="https://github.com/user-attachments/assets/3c4b9fcf-5825-4c46-9f59-57b0a7750f0c">
+
+
 **Conversion des plugins jQuery en composants React.**
 
 Le formulaire d'ajout d'employés permet de créer de nouveaux employés en saisissant des informations telles que le prénom, le nom, la date de naissance, la date de début, l'adresse et le département. Les informations saisies sont validées, et des messages d'erreur s'affichent si les données ne sont pas valides.
